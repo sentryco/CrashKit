@@ -6,34 +6,54 @@ public func redactSensitiveInfo(crashLog: [String: String]) -> [String: String] 
 }
 
 fileprivate func redactSensitiveInfo(from log: String) -> String {
-   // Define patterns for sensitive information
-   let patterns: [String: String] = [
-      // Example: Email address
-      "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}": "[REDACTED_EMAIL]",
-      
-      // Example: Password (e.g., key-value pair with "password")
-      "(?i)password\\s*[:=]\\s*[^\\s]+": "password=[REDACTED]",
-      
-      // Example: Phone number (basic pattern, adjust as needed)
-      "\\b\\d{3}[-.\\s]?\\d{3}[-.\\s]?\\d{4}\\b": "[REDACTED_PHONE]",
-      
-      // Example: API Key or Token (alphanumeric, 16-64 chars)
-      "\\b[a-zA-Z0-9]{16,64}\\b": "[REDACTED_API_KEY]"
-   ]
-   
    var redactedLog = log
    
-   // Apply each pattern to the log
-   for (pattern, replacement) in patterns {
-      if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
-         redactedLog = regex.stringByReplacingMatches(
-            in: redactedLog,
-            options: [],
-            range: NSRange(location: 0, length: redactedLog.utf16.count),
-            withTemplate: replacement
-         )
-      }
+   for pattern in redactionPatterns {
+      redactedLog = pattern.regex.stringByReplacingMatches(
+         in: redactedLog,
+         options: [],
+         range: NSRange(location: 0, length: redactedLog.utf16.count),
+         withTemplate: pattern.replacement
+      )
    }
    
    return redactedLog
 }
+ 
+public enum RedactionPattern: String, CaseIterable {
+    case email = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+    case creditCard = "\\b(?:\\d[ -]*?){13,16}\\b"
+    case ipAddress = "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b"  // IPv4 pattern
+    case authToken = "Bearer\\s+[a-zA-Z0-9\\-\\._~\\+\\/]+=*"  // Authentication tokens
+    case privateKey = #"-----BEGIN PRIVATE KEY-----(?:.|\n)+?-----END PRIVATE KEY-----"#
+    case publicKey = #"-----BEGIN PUBLIC KEY-----(?:.|\n)+?-----END PUBLIC KEY-----"#
+    case seedPhrase = #"(\b\w+\b[\s]*){12,24}"#
+    case urlWithSensitiveParams = #"https?:\/\/\S+\?(?:\S*?(token|key|secret)=\S+)+"#
+    var replacement: String {
+        switch self {
+        case .email:
+            return "[REDACTED_EMAIL]"
+        case .creditCard:
+            return "[REDACTED_CREDIT_CARD]"
+        case .ipAddress:
+            return "[REDACTED_IP_ADDRESS]"
+        case .authToken:
+            return "Bearer [REDACTED_TOKEN]"
+        case .privateKey:
+            return "[REDACTED PRIVATE KEY]"
+        case .publicKey:
+            return "[REDACTED PUBLIC KEY]"
+        case .seedPhrase:
+            return "[REDACTED_SEED_PHRASE]"
+        case .urlWithSensitiveParams:
+            return "[REDACTED_URL]"
+        }
+    }
+    var regex: NSRegularExpression {
+        return try! NSRegularExpression(pattern: self.rawValue, options: [])
+    }
+}
+
+fileprivate let redactionPatterns: [RedactionPattern] = {
+    return RedactionPattern.allCases
+}()
