@@ -1,24 +1,22 @@
-// swift-tools-version: 6.0
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version: 5.9
 import PackageDescription
 
 let package = Package(
     name: "CrashKit",
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "CrashKit",
             targets: ["CrashKit"]),
     ],
+    dependencies: [
+        // Add the Telemetric package from the sentryco GitHub repository
+        .package(url: "https://github.com/sentryco/Telemetric.git", branch: "main")
+    ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "CrashKit"),
         .testTarget(
             name: "CrashKitTests",
-            dependencies: ["CrashKit"]
-        ),
+            dependencies: ["CrashKit", "Telemetric"]), // Add Telemetric as a dependency to the CrashKitTests target
     ]
 )

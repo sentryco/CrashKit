@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "telemetric",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sentryco/Telemetric.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "0252764bfcdaf217a37b141fa42f635e015523e0"
+      }
+    }
+  ],
+  "version" : 2
+}
