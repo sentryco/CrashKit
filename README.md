@@ -1,4 +1,5 @@
 [![Tests](https://github.com/sentryco/CrashKit/actions/workflows/Tests.yml/badge.svg)](https://github.com/sentryco/CrashKit/actions/workflows/Tests.yml)
+[![codebeat badge](https://codebeat.co/badges/07327740-2f56-4b15-8e62-9f5f78543ffe)](https://codebeat.co/projects/github-com-sentryco-crashkit-main)
 
 # CrashKit
 
