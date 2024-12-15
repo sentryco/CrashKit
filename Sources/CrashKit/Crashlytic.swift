@@ -22,13 +22,13 @@ extension Crashlytic {
     * - Note: You cannot recover from or handle fatal errors like force unwrapping nil.
     */
    public func setUpCrashHandler() {
-      // Set up uncaught exception handler
+      // Handle uncaught exceptions
       NSSetUncaughtExceptionHandler { exception in
          let crashLog: [String: String] = exceptionHandler(from: exception)
          saveCrashReport(crashLog)
          // Note: Do not attempt to make network requests here, as the app is unstable
       }
-      // Set up signal handlers
+      // Handle various signals that can cause crashes
       // Crashes caused by signals (e.g., SIGABRT, SIGSEGV) or low-level errors captured here.
       signal(SIGABRT) { _ in handleSignal() }
       signal(SIGILL) { _ in handleSignal() }
