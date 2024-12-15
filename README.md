@@ -1,3 +1,5 @@
+[![Tests](https://github.com/sentryco/CrashKit/actions/workflows/Tests.yml/badge.svg)](https://github.com/sentryco/CrashKit/actions/workflows/Tests.yml)
+
 # CrashKit
 
 > Minimal crashlytics for iOS and macOS
