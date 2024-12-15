@@ -1,3 +1,4 @@
+import Foundation
 extension FileManager {
    
    static func getDocumentsDirectory() -> URL {

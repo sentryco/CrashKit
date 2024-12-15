@@ -19,7 +19,7 @@ internal func exceptionHandler(from exception: NSException) -> [String: String] 
 /**
  * Handle signals
  */
-fileprivate func handleSignal() {
+internal func handleSignal() {
    let crashLog: [String: String] = exceptionHandler(from: NSException(name: NSExceptionName(rawValue: "Critical Argument Error"), reason: "Unhandled signal", userInfo: nil))
    saveCrashReport(crashLog)
    // Note: Do not attempt to make network requests here, as the app is unstable
@@ -27,7 +27,7 @@ fileprivate func handleSignal() {
 /**
  * File
  */
-fileprivate func saveCrashReport(_ details: [String: String]) {
+internal func saveCrashReport(_ details: [String: String]) {
    let crashReport = try? JSONSerialization.data(withJSONObject: details, options: [])
    let crashReportPath = FileManager.getDocumentsDirectory().appendingPathComponent("last_crash.json")
    try? crashReport?.write(to: crashReportPath)
