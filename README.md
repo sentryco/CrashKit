@@ -22,6 +22,7 @@ Video of using GA4 as endpoint for crash-reporting via [https://github.com/sentr
 - For swiftUI use the init method in your app scope (iOS and macOS)
 - Use your own analytics endpoint. Like GA4 via [https://github.com/sentryco/Telemetric](https://github.com/sentryco/Telemetric) 
 - Use the built-in or custom sanitizer logic to redact personal information
+
 ```swift
 import SwiftUI
 import CrashKit
@@ -51,15 +52,19 @@ struct MyApp: App {
 > Recording crash to logs only works when xcode is detached. Run the app directly from the system without xcode attached or press "debug" -> "detach from xcode" if you run the app from xcode. Run the app from xcode after a crash and see the crash log being sent to the server.
 
 ### Installation
+There is also an xcode example project in this repository. `ExampleDemo` where crashing can be tested
+
 ```swift
 .package(url: "https://github.com/sentryco/CrashKit", branch: "main")
 ```
+
+> [!NOTE]  
+> Telemetric https://github.com/sentryco/Telemetric is added to the testing target and in the ExampleDemo xcode project
 
 ### Real-device vs Simulator vs Unit-test 
 1. On Device: This will work effectively on actual iOS devices. Uncaught exceptions, such as those thrown by Objective-C code or unhandled NSExceptions, will be captured by this handler.
 2. In Simulator: The behavior in the simulator should be similar to that on an actual device. The simulator is designed to emulate the behavior of iOS hardware closely, including the handling of exceptions. However, there might be slight differences in how some low-level system interactions occur.
 3. In Unit Tests: Typically, unit tests are designed to run in isolation and handle exceptions internally to report test failures. If an uncaught exception occurs during a unit test, it might not be handled by the NSSetUncaughtExceptionHandler unless the testing framework is explicitly configured to allow it. Most modern testing frameworks in Swift, like XCTest, have their mechanisms to handle exceptions and might bypass or override the behavior of NSSetUncaughtExceptionHandler.
-
 
 ### Resources: 
 - To handle or not to handle crashes your self: https://medium.com/swlh/building-your-own-crash-report-in-swift-think-twice-before-doing-it-795ee7e23ee8

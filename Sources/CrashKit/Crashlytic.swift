@@ -20,7 +20,7 @@ extension Crashlytic {
     */
    public func setUpCrashHandler() {
       #if DEBUG
-      Swift.print("setUpCrashHandler")
+      if isDebug { Swift.print("setUpCrashHandler") }
       #endif
       // Handle uncaught exceptions
       NSSetUncaughtExceptionHandler { exception in
@@ -48,18 +48,19 @@ extension Crashlytic {
     */
    public func processCrashReport() {
       #if DEBUG
-      Swift.print("processCrashReport")
+      if isDebug { Swift.print("processCrashReport") }
       #endif
       let crashReportPath = FileManager.getDocumentsDirectory().appendingPathComponent("last_crash.json")
       if let crashData = try? Data(contentsOf: crashReportPath),
          let crashDetails: [String: String] = try? JSONSerialization.jsonObject(with: crashData, options: []) as? [String: String] {
          #if DEBUG
-         Swift.print("crashData.count \(crashData.count)")
-         let multilineString = crashDetails
-            .map { "\($0.key): \($0.value)" }
-            .joined(separator: "\n")
-         
-         print(multilineString)
+         if isDebug {
+            Swift.print("crashData.count \(crashData.count)")
+            let multilineString = crashDetails
+               .map { "\($0.key): \($0.value)" }
+               .joined(separator: "\n")
+            print(multilineString)
+         }
          #endif
          // Send the crash details to your endpoint
          sendCrashReportToServer?(crashDetails)
@@ -67,10 +68,9 @@ extension Crashlytic {
          try? FileManager.default.removeItem(at: crashReportPath)
       } else {
          #if DEBUG
-         Swift.print("No crashReport on file")
+         if isDebug { Swift.print("No crashReport on file") }
          #endif
       }
    }
 }
-
-
+let isDebug: Bool = false

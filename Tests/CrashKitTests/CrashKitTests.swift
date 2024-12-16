@@ -3,7 +3,9 @@ import Telemetric
 @testable import CrashKit
 
 class TelemetricTests: XCTestCase {
-   // test endpoint with mock error log
+   /**
+    * Test endpoint with mock error log
+    */
    func testProcessingCrash() throws {
       let mockException = NSException(name: NSExceptionName(rawValue: "TestException"), reason: "TestReason", userInfo: nil)
       Crashlytic.shared.handleException(mockException)
@@ -16,8 +18,8 @@ class TelemetricTests: XCTestCase {
          Swift.print("sendCrashReportToServer")
          let tracker = Tracker(
             measurementID: "",
-            apiSecret: ""//,
-//            apiEndpoint: "https://www.google-analytics.com/debug/mp/collect" // debug payload
+            apiSecret: ""
+            // apiEndpoint: "https://www.google-analytics.com/debug/mp/collect" // debug payload
          )
          // 3. redact personal information
          let redactedCrashDetails = redactSensitiveInfo(crashLog: crashDetails)
@@ -31,7 +33,11 @@ class TelemetricTests: XCTestCase {
       Crashlytic.shared.processCrashReport()
       self.wait(for: [expectation], timeout: 10.0)
    }
-   // test sanitazion of logs
+   /**
+    * Test sanitazion of logs
+    * - Fixme: ⚠️️ Add MockData as a testing dep to test more cases
+    * - Fixme: ⚠️️ Actually spin this redaction out into a module. RedactionKit?
+    */
    func testRedaction() throws {
       let crashLog: [String: String] = [
          "User": "john.doe@example.com",
@@ -43,17 +49,13 @@ class TelemetricTests: XCTestCase {
          "URL with Sensitive Params": "https://example.com?token=abcdef123456",
          "Error": "Something went wrong."
       ]
-      
       let sanitizedLog: [String: String] = redactSensitiveInfo(crashLog: crashLog)
-      
       let multilineString = sanitizedLog.mapValues { value in
          return "\(value)"
       }.map { key, value in
          return "\(key): \(value)"
       }.joined(separator: "\n")
-      
       print(multilineString)
-      
       // Assert that sensitive fields are redacted
       XCTAssertEqual(sanitizedLog["User"], RedactionPattern.email.replacement)
       XCTAssertEqual(sanitizedLog["Credit Card"], RedactionPattern.creditCard.replacement)

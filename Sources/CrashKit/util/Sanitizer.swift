@@ -1,13 +1,17 @@
 import Foundation
 
 // Be cautious about what information is included in crash logs in the first place, especially for apps dealing with highly sensitive data
+/**
+ * - Fixme: ⚠️️ add doc
+ */
 public func redactSensitiveInfo(crashLog: [String: String]) -> [String: String] {
     return crashLog.mapValues { redactSensitiveInfo(from: $0) }
 }
-
+/**
+ * - Fixme: ⚠️️ add doc
+ */
 fileprivate func redactSensitiveInfo(from log: String) -> String {
    var redactedLog = log
-   
    for pattern in redactionPatterns {
       redactedLog = pattern.regex.stringByReplacingMatches(
          in: redactedLog,
@@ -16,10 +20,11 @@ fileprivate func redactSensitiveInfo(from log: String) -> String {
          withTemplate: pattern.replacement
       )
    }
-   
    return redactedLog
 }
- 
+/**
+ * - Fixme: ⚠️️ add doc
+ */
 public enum RedactionPattern: String, CaseIterable {
     case email = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
     case creditCard = "\\b(?:\\d[ -]*?){13,16}\\b"
