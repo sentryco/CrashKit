@@ -24,18 +24,16 @@ extension Crashlytic {
       #endif
       // Handle uncaught exceptions
       NSSetUncaughtExceptionHandler { exception in
-         let crashLog: [String: String] = exceptionHandler(from: exception)
-         saveCrashReport(crashLog)
-         // Note: Do not attempt to make network requests here, as the app is unstable
+         handleException(exception)
       }
       // Handle various signals that can cause crashes
       // Crashes caused by signals (e.g., SIGABRT, SIGSEGV) or low-level errors captured here.
-      signal(SIGABRT) { _ in handleSignal() }
-      signal(SIGILL) { _ in handleSignal() }
-      signal(SIGSEGV) { _ in handleSignal() }
-      signal(SIGFPE) { _ in handleSignal() }
-      signal(SIGBUS) { _ in handleSignal() }
-      signal(SIGPIPE) { _ in handleSignal() }
+      signal(SIGABRT) { signal in handleSignal(signal) }
+      signal(SIGILL) { signal in handleSignal(signal) }
+      signal(SIGSEGV) { signal in handleSignal(signal) }
+      signal(SIGFPE) { signal in handleSignal(signal) }
+      signal(SIGBUS) { signal in handleSignal(signal) }
+      signal(SIGPIPE) { signal in handleSignal(signal) }
    }
 }
 /**

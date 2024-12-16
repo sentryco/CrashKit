@@ -1,10 +1,41 @@
 import Foundation
 /**
- * Handler
+ * - Note: Do not attempt to make network requests here, as the app is unstable
+ */
+func handleException(_ exception: NSException) {
+   let crashLog: [String: String] = createCrashLog(from: exception)
+   saveCrashReport(crashLog)
+}
+/**
+ * - Fixme: ⚠️️ add doc
+ */
+func handleSignal(_ signal: Int32) {
+   let crashLog: [String: String] = createCrashLog(from: signal)
+   saveCrashReport(crashLog)
+}
+/**
+ * - Fixme: ⚠️️ add doc
+ * - Fixme: ⚠️️ we can unpack more info here. see issue tracker for more info
+ */
+func createCrashLog(from signal: Int32) -> [String: String] {
+   #if DEBUG
+   if isDebug { Swift.print("createCrashLog(signal:)") }
+   #endif
+   let crashLog = [
+      "Signal": "\(signal)",
+      "reason": "\(Date())",
+   ]
+   // Note: Save the crash details locally (e.g., in UserDefaults or a file)
+   return crashLog
+}
+/**
  * - Note: must be global function, due to c-pointer limitations
  * - Note: Function to create crash log
  */
-internal func exceptionHandler(from exception: NSException) -> [String: String] {
+internal func createCrashLog(from exception: NSException) -> [String: String] {
+   #if DEBUG
+   if isDebug { Swift.print("createCrashLog(exception:)") }
+   #endif
    let crashLog = [
       "name": "\(exception.name.rawValue)",
       "reason": "\(exception.reason ?? "No reason provided")",
@@ -14,24 +45,6 @@ internal func exceptionHandler(from exception: NSException) -> [String: String] 
    ]
    // Note: Save the crash details locally (e.g., in UserDefaults or a file)
    return crashLog
-}
-
-/**
- * Handle signals
- */
-internal func handleSignal() {
-   #if DEBUG
-   if isDebug { Swift.print("handleSignal") }
-   #endif
-   let crashLog: [String: String] = exceptionHandler(
-      from: NSException(
-         name: NSExceptionName(rawValue: "Critical Argument Error"),
-         reason: "Unhandled signal",
-         userInfo: nil
-      )
-   )
-   saveCrashReport(crashLog)
-   // Note: Do not attempt to make network requests here, as the app is unstable
 }
 /**
  * File
