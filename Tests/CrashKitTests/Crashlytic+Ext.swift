@@ -3,8 +3,8 @@ import Foundation
 
 // for testing
 extension Crashlytic {
-   func handleException(_ exception: NSException) {
-      let crashLog: [String: String] = exceptionHandler(from: exception)
+   func exceptionHandler(_ exception: NSException) {
+      let crashLog: [String: String] = createCrashLog(from: exception)
       saveCrashReport(crashLog)
    }
 }

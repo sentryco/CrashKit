@@ -8,7 +8,7 @@ class TelemetricTests: XCTestCase {
     */
    func testProcessingCrash() throws {
       let mockException = NSException(name: NSExceptionName(rawValue: "TestException"), reason: "TestReason", userInfo: nil)
-      Crashlytic.shared.handleException(mockException)
+      Crashlytic.shared.exceptionHandler(mockException)
       // Verify that the crash log is saved correctly
       // This might involve checking the file system or a mock of the saveCrashReport method
       let expectation = self.expectation(description: "crash test")
