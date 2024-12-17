@@ -1,21 +1,26 @@
 import Foundation
 /**
- * - Note: Do not attempt to make network requests here, as the app is unstable
+ * Handles uncaught exceptions by creating a crash log and saving it.
+ * - Note: Do not attempt to make network requests here, as the app is unstable.
+ * - Parameter exception: The uncaught NSException that caused the crash.
  */
 func handleException(_ exception: NSException) {
    let crashLog: [String: String] = createCrashLog(from: exception)
    saveCrashReport(crashLog)
 }
 /**
- * - Fixme: ⚠️️ add doc
+ * Handles crashes caused by signals by creating a crash log and saving it.
+ * - Parameter signal: The signal that caused the crash.
  */
 func handleSignal(_ signal: Int32) {
    let crashLog: [String: String] = createCrashLog(from: signal)
    saveCrashReport(crashLog)
 }
 /**
- * - Fixme: ⚠️️ add doc
+ * Creates a crash log from a signal.
  * - Fixme: ⚠️️ we can unpack more info here. see issue tracker for more info
+ * - Parameter signal: The signal that caused the crash.
+ * - Returns: A dictionary containing the crash details.
  */
 func createCrashLog(from signal: Int32) -> [String: String] {
    #if DEBUG
@@ -29,8 +34,11 @@ func createCrashLog(from signal: Int32) -> [String: String] {
    return crashLog
 }
 /**
- * - Note: must be global function, due to c-pointer limitations
- * - Note: Function to create crash log
+ * Creates a crash log from an exception.
+ * This function captures detailed information about an exception that can be used for debugging and logging purposes.
+ * - Note: Must be a global function due to c-pointer limitations.
+ * - Parameter exception: The NSException instance from which to create the log.
+ * - Returns: A dictionary containing keys such as 'name', 'reason', 'userInfo', 'stackTrace', and 'timestamp' with corresponding values describing the exception.
  */
 internal func createCrashLog(from exception: NSException) -> [String: String] {
    #if DEBUG
@@ -47,7 +55,10 @@ internal func createCrashLog(from exception: NSException) -> [String: String] {
    return crashLog
 }
 /**
- * File
+ * Saves the crash report to a file.
+ * This function serializes the crash details into JSON format and writes them to a file
+ * in the app's documents directory. The file is named "last_crash.json".
+ * - Parameter details: A dictionary containing the crash details to be saved.
  */
 internal func saveCrashReport(_ details: [String: String]) {
    #if DEBUG

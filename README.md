@@ -9,6 +9,16 @@
 
 Video of using GA4 as endpoint for crash-reporting via [https://github.com/sentryco/Telemetric](https://github.com/sentryco/Telemetric)
 
+### Problem:
+- Crash reporting often captures excessive data, compromising privacy.
+- Industry standards currently lack privacy considerations.
+- Personal information is not redacted on the client side.
+
+### Solution:
+- Allow customization of crash log contents to include only essential metadata, avoiding full stack traces that may contain sensitive data.
+- Implement your own redaction logic using heuristics or custom models through CoreML.
+- Utilize a custom server mechanism for secure crash log transmission.
+
 ### Features:
 - Catch both exceptions and signal crashes
 - Log exception name, reason, stack trace, and timestamp
@@ -72,6 +82,9 @@ There is also an xcode example project in this repository. `ExampleDemo` where c
 - NSException: https://developer.apple.com/documentation/foundation/nsexception
 - SO related: https://stackoverflow.com/questions/51672291/how-to-implement-exception-error-handling-in-swift-4-with-native-crash-reporting
 - Opensource crash framework for iOS: https://github.com/kstenerud/KSCrash
+
+### Todo: 
+- Add support for stack traces. See issue tracker for more info
 
 ### Best Practices for Crash Handling
 
