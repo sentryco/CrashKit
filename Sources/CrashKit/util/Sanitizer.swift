@@ -1,19 +1,24 @@
-import Foundation
-
-// Be cautious about what information is included in crash logs in the first place, especially for apps dealing with highly sensitive data
+import Foundation'
 /**
- * - Fixme: ⚠️️ add doc
+ * Redacts sensitive information from a dictionary representing a crash log.
+ * - Description: This function iterates over each key-value pair in the provided dictionary,
+ * applying redaction to the value to remove sensitive information such as
+ * emails, IP addresses, and other patterns defined in `redactionPatterns`.
+ * It returns a new dictionary with the same keys but with redacted values.
+ * - Note: Be cautious about what information is included in crash logs in the first place, especially for apps dealing with highly sensitive data
+ * - Parameter crashLog: A dictionary representing the crash log, where keys are
+ *                       identifiers and values are the corresponding log entries.
+ * - Returns: A new dictionary with the same keys as the input `crashLog`, but
+ *            with each value redacted to remove sensitive information.
  */
 public func redactSensitiveInfo(crashLog: [String: String]) -> [String: String] {
     return crashLog.mapValues { redactSensitiveInfo(from: $0) }
 }
 /**
  * Redacts sensitive information from a given log string.
- *
- * This function iterates over predefined patterns of sensitive data (like emails, IP addresses, etc.)
+ * - Description: This function iterates over predefined patterns of sensitive data (like emails, IP addresses, etc.)
  * and replaces occurrences with a generic redacted message. This helps in ensuring that sensitive
  * information is not exposed in log outputs.
- *
  * - Parameter log: The original log string containing potential sensitive information.
  * - Returns: A redacted version of the log string with sensitive information obscured.
  */
@@ -31,8 +36,7 @@ fileprivate func redactSensitiveInfo(from log: String) -> String {
 }
 /**
  * Enumerates patterns of sensitive data that need to be redacted from logs.
- *
- * This enum provides regular expressions for identifying sensitive information
+ * - Description: This enum provides regular expressions for identifying sensitive information
  * in strings and specifies the replacement text for each type of sensitive data.
  * It supports redaction of emails, credit card numbers, IP addresses, authentication tokens,
  * private keys, public keys, seed phrases, and URLs with sensitive parameters.
@@ -72,8 +76,7 @@ public enum RedactionPattern: String, CaseIterable {
 }
 /**
  * A collection of all redaction patterns.
- *
- * This array contains all the cases of the `RedactionPattern` enum, which represent
+ * - Description: This array contains all the cases of the `RedactionPattern` enum, which represent
  * different types of sensitive data that need to be redacted from logs.
  */
 fileprivate let redactionPatterns: [RedactionPattern] = {
