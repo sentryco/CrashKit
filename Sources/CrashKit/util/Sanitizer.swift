@@ -1,4 +1,4 @@
-import Foundation'
+import Foundation
 /**
  * Redacts sensitive information from a dictionary representing a crash log.
  * - Description: This function iterates over each key-value pair in the provided dictionary,
