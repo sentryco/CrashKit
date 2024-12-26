@@ -10,14 +10,14 @@
 Video of using GA4 as endpoint for crash-reporting via [https://github.com/sentryco/Telemetric](https://github.com/sentryco/Telemetric)
 
 ### Problem:
-- Crash reporting often captures excessive data, compromising privacy.
-- Industry standards currently lack privacy considerations.
-- Personal information is not redacted on the client side.
+- 🚧 Crash reporting often captures excessive data, compromising privacy.
+- 🕵️‍♂️ Industry standards currently lack privacy considerations.
+- 🧹Personal information is not redacted on the client side.
 
 ### Solution:
-- Allow customization of crash log contents to include only essential metadata, avoiding full stack traces that may contain sensitive data.
-- Implement your own redaction logic using heuristics or custom models through CoreML.
-- Utilize a custom server mechanism for secure crash log transmission.
+- 🗜️ Allow customization of crash log contents to include only essential metadata, avoiding full stack traces that may contain sensitive data.
+- 📡 Utilize a custom server mechanism for secure crash log transmission.
+- 🧼 Implement your own redaction logic using heuristics or custom models through CoreML.
 
 ### Features:
 - Catch both exceptions and signal crashes
