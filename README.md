@@ -20,12 +20,12 @@ Video of using GA4 as endpoint for crash-reporting via [https://github.com/sentr
 - Utilize a custom server mechanism for secure crash log transmission.
 
 ### Features:
-- Catch both exceptions and signal crashes
-- Log exception name, reason, stack trace, and timestamp
-- Send crash log to a server using the callback crash handler. Use your own endpoint. or [https://github.com/sentryco/Telemetric](https://github.com/sentryco/Telemetric)
-- Crash logs are stored on file and sent to a server on subsequent app run
-- Built in crash log sanitization, or supply your own custom sanitizer logic
-- Filter out log properties based on your own privacy criteria
+- 🛠️ Catch both exceptions and signal crashes
+- 📝 Log exception name, reason, stack trace, and timestamp
+- 🌐 Send crash log to a server using the callback crash handler. Use your own endpoint or [https://github.com/sentryco/Telemetric](https://github.com/sentryco/Telemetric)
+- 💾 Crash logs are stored on file and sent to a server on subsequent app run
+- 🔍 Built-in crash log sanitization, or supply your own custom sanitizer logic
+- 🔒 Filter out log properties based on your own privacy criteria
 
 ### Examples:
 - Setup crashlytic in the didFinishLaunchin of your iOS and macOS app
