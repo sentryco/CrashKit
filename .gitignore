@@ -90,3 +90,9 @@ fastlane/test_output
 iOSInjectionProject/
 *.resolved
 *.resolved
+
+# Remove duplicate entries
+*.resolved
+
+# Add any other necessary ignores
+.DS_Store

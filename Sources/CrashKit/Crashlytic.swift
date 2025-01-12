@@ -4,7 +4,9 @@ public class Crashlytic {
    /**
     * Callback to send crash log to server
     */
-   public var sendCrashReportToServer: ((_ crashDetails: [String: String]) -> Void)? = { _ in print("⚠️️ No server configured ⚠️️") }
+   public var sendCrashReportToServer: ((_ crashDetails: [String: String]) -> Void)? = { _ in 
+      print("⚠️️ No server configured ⚠️️") 
+   }
    public static let shared = Crashlytic()
 }
 /**
@@ -43,6 +45,7 @@ extension Crashlytic {
    /**
     * Proces local crash report if available and send to server
     * - Note: Call this on app launch
+    * - Fixme: add async later?
     */
    public func processCrashReport() {
       #if DEBUG
@@ -57,7 +60,7 @@ extension Crashlytic {
             let multilineString = crashDetails
                .map { "\($0.key): \($0.value)" }
                .joined(separator: "\n")
-            print(multilineString)
+            Swift.print(multilineString)
          }
          #endif
          // Send the crash details to your endpoint

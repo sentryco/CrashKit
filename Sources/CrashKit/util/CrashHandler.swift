@@ -26,9 +26,19 @@ func createCrashLog(from signal: Int32) -> [String: String] {
    #if DEBUG
    if isDebug { Swift.print("createCrashLog(signal:)") }
    #endif
+   let signalDescriptions: [Int32: String] = [
+      SIGABRT: "SIGABRT - Abnormal termination",
+      SIGILL:  "SIGILL - Illegal instruction",
+      SIGSEGV: "SIGSEGV - Segmentation violation",
+      SIGFPE:  "SIGFPE - Floating-point exception",
+      SIGBUS:  "SIGBUS - Bus error",
+      SIGPIPE: "SIGPIPE - Broken pipe"
+   ]
+   let signalName = signalDescriptions[signal] ?? "Unknown signal"
    let crashLog = [
       "Signal": "\(signal)",
-      "reason": "\(Date())",
+      "SignalName": signalName,
+      "Timestamp": "\(Date())"
    ]
    // Note: Save the crash details locally (e.g., in UserDefaults or a file)
    return crashLog
@@ -64,8 +74,13 @@ internal func saveCrashReport(_ details: [String: String]) {
    #if DEBUG
    if isDebug { Swift.print("saveCrashReport") }
    #endif
-   let crashReport = try? JSONSerialization.data(withJSONObject: details, options: [])
-   let crashReportPath = FileManager.getDocumentsDirectory().appendingPathComponent("last_crash.json")
-   try? crashReport?.write(to: crashReportPath)
+   if let crashReport = try? JSONSerialization.data(withJSONObject: details, options: []) {
+       let crashReportPath = FileManager.getDocumentsDirectory().appendingPathComponent("last_crash.json")
+       try? crashReport.write(to: crashReportPath)
+   } else {
+       print("Failed to serialize crash details.")
+   }
 }
-
+// let crashReport = try? JSONSerialization.data(withJSONObject: details, options: [])
+// let crashReportPath = FileManager.getDocumentsDirectory().appendingPathComponent("last_crash.json")
+// try? crashReport?.write(to: crashReportPath)
