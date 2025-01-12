@@ -23,17 +23,32 @@ public func redactSensitiveInfo(crashLog: [String: String]) -> [String: String] 
  * - Returns: A redacted version of the log string with sensitive information obscured.
  */
 fileprivate func redactSensitiveInfo(from log: String) -> String {
-   var redactedLog = log
-   for pattern in redactionPatterns {
-      redactedLog = pattern.regex.stringByReplacingMatches(
-         in: redactedLog,
-         options: [],
-         range: NSRange(location: 0, length: redactedLog.utf16.count),
-         withTemplate: pattern.replacement
-      )
-   }
-   return redactedLog
+    var redactedLog = log
+    for pattern in redactionPatterns {
+        if let regex = regexes[pattern] {
+            redactedLog = regex.stringByReplacingMatches(
+                in: redactedLog,
+                options: [],
+                range: NSRange(location: 0, length: redactedLog.utf16.count),
+                withTemplate: pattern.replacement
+            )
+        }
+    }
+    return redactedLog
 }
+/**
+* Precompiled regular expressions for each redaction pattern.
+*
+* - Description: This dictionary compiles and caches `NSRegularExpression` instances for each `RedactionPattern`.
+* It enhances performance by avoiding recompilation of regex patterns during the redaction process.
+*/
+private let regexes: [RedactionPattern: NSRegularExpression] = {
+    var regexDict = [RedactionPattern: NSRegularExpression]()
+    for pattern in RedactionPattern.allCases {
+        regexDict[pattern] = try? NSRegularExpression(pattern: pattern.rawValue)
+    }
+    return regexDict
+}()
 /**
  * Enumerates patterns of sensitive data that need to be redacted from logs.
  * - Description: This enum provides regular expressions for identifying sensitive information
@@ -42,7 +57,7 @@ fileprivate func redactSensitiveInfo(from log: String) -> String {
  * private keys, public keys, seed phrases, and URLs with sensitive parameters.
  */
 public enum RedactionPattern: String, CaseIterable {
-    case email = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+    case email = #"(?:[a-zA-Z0-9_'^&/+-]+)(?:\.(?:[a-zA-Z0-9_'^&/+-]+))*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}"# // case email = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
     case creditCard = "\\b(?:\\d[ -]*?){13,16}\\b"
     case ipAddress = "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b"  // IPv4 pattern
     case authToken = "Bearer\\s+[a-zA-Z0-9\\-\\._~\\+\\/]+=*"  // Authentication tokens
