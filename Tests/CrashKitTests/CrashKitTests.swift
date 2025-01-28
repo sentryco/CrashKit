@@ -57,7 +57,9 @@ class TelemetricTests: XCTestCase {
       }
    }
    /**
-    * - Fixme: ⚠️️ add doc
+    * Test Handling of SIGABRT Signal
+    *
+    * Simulates receiving a SIGABRT signal and verifies that the crash report is saved correctly with appropriate signal details.
     */
    func testHandleSignalSIGABRT() throws {
       let signal: Int32 = SIGABRT
@@ -75,7 +77,9 @@ class TelemetricTests: XCTestCase {
       }
    }
    /**
-    * - Fixme: ⚠️️ add doc
+    * Test Handling of SIGSEGV Signal
+    *
+    * Simulates receiving a SIGSEGV signal and verifies that the crash report is saved correctly with appropriate signal details.
     */
    func testHandleSignalSIGSEGV() throws {
       let signal: Int32 = SIGSEGV
@@ -159,7 +163,14 @@ class TelemetricTests: XCTestCase {
    /**
     * Test Redaction of Multiple Patterns in a Single String
     * Test that the redaction logic correctly handles strings containing multiple sensitive data patterns.
-    * - Fixme: ⚠️️ add doc
+    * - Description: This test verifies that the redaction function correctly handles and redacts multiple sensitive information patterns within a single crash log entry. It ensures that sensitive data such as user emails, credit card numbers, IP addresses, authentication tokens, and private keys are properly redacted according to predefined redaction patterns.
+    * - Objective: To ensure the redaction logic robustly identifies and sanitizes multiple types of sensitive information present in the crash log, preventing potential data leaks.
+    * - Steps:
+    *   1. Prepare a crash log containing multiple sensitive fields.
+    *   2. Apply the `redactSensitiveInfo` function to sanitize the crash log.
+    *   3. Assert that each sensitive field is properly redacted.
+    *   4. Ensure that non-sensitive fields remain untouched.
+    * - Note: This test also verifies that the redaction process does not leave any sensitive information accessible in the redacted output.
     */
    func testRedactMultipleSensitiveInfo() throws {
       let crashLog: [String: String] = [
